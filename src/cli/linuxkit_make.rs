@@ -1,6 +1,7 @@
 use crate::AnyError;
 
 use crate::manifest::*;
+use crate::EnvSubst;
 
 use std::path::Path;
 
@@ -23,6 +24,8 @@ impl LinuxkitMake {
             files: util::read_dir_as_vec(project_root.join("files.d"))?,
             trust: util::read_file(project_root.join("trust.yml"))?,
         };
+
+        let manifest = manifest.env_subst(&std::env::vars().collect())?;
 
         let stdout = std::io::stdout();
         let stdout = stdout.lock();
